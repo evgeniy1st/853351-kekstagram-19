@@ -13,8 +13,8 @@ var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var MIN_COMMENTS = 1;
 var MAX_COMMENTS = 4;
-var listPosts = document.querySelector('#picture');
-var picture = listPosts.content.querySelector('.picture');
+var listPosts = document.querySelector('.pictures');
+var picture = document.querySelector('#picture').content.querySelector('.picture');
 
 var getRandomNumber = function (min, max) {
   min = Math.ceil(min);
@@ -88,5 +88,3 @@ generateAvatars('img', 'avatar', TOTAL_AVATARS);
 generateComments(TOTAL_QUANTITY);
 
 renderPosts(TOTAL_QUANTITY);
-
-
