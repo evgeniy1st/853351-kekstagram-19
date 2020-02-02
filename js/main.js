@@ -55,21 +55,22 @@ var getRandomListComments = function () {
   return randomListComments;
 };
 
-var getPostData = function () {
+var getPostData = function (index) {
   return {
-    url: LIST_OF_URL_FOTOS[getRandomNumber(0, LIST_OF_URL_FOTOS.length)],
+    url: LIST_OF_URL_FOTOS[index],
     description: LIST_OF_DESCRIPTION[getRandomNumber(0, LIST_OF_DESCRIPTION.length)],
     likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
     commens: getRandomListComments()
   };
 };
 
-var generatePost = function () {
+var generatePost = function (index) {
   var post = picture.cloneNode(true);
+  var postData = getPostData(index);
 
-  post.querySelector('.picture__img').src = getPostData().url;
-  post.querySelector('.picture__likes').textContent = getPostData().likes;
-  post.querySelector('.picture__comments').textContent = getPostData().commens.length;
+  post.querySelector('.picture__img').src = postData.url;
+  post.querySelector('.picture__likes').textContent = postData.likes;
+  post.querySelector('.picture__comments').textContent = postData.commens.length;
 
   return post;
 };
@@ -77,7 +78,7 @@ var generatePost = function () {
 var renderPosts = function (quantity) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < quantity; i++) {
-    fragment.appendChild(generatePost());
+    fragment.appendChild(generatePost(i));
   }
   listPosts.appendChild(fragment);
 };
@@ -87,3 +88,4 @@ generateAvatars('img', 'avatar', TOTAL_AVATARS);
 generateComments(TOTAL_QUANTITY);
 
 renderPosts(TOTAL_QUANTITY);
+
