@@ -12,6 +12,7 @@ var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var MIN_COMMENTS = 1;
 var MAX_COMMENTS = 4;
+var INDEX_OF_BIG_PICTURE = 0;
 var listPosts = document.querySelector('.pictures');
 var picture = document.querySelector('#picture').content.querySelector('.picture');
 
@@ -60,7 +61,7 @@ var getPostData = function (index) {
     url: LIST_OF_URL_FOTOS[index],
     description: LIST_OF_DESCRIPTION[getRandomNumber(0, LIST_OF_DESCRIPTION.length)],
     likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
-    commens: getRandomListComments()
+    comments: getRandomListComments()
   };
 };
 
@@ -70,7 +71,7 @@ var generatePost = function (index) {
 
   post.querySelector('.picture__img').src = postData.url;
   post.querySelector('.picture__likes').textContent = postData.likes;
-  post.querySelector('.picture__comments').textContent = postData.commens.length;
+  post.querySelector('.picture__comments').textContent = postData.comments.length;
 
   return post;
 };
@@ -83,9 +84,42 @@ var renderPosts = function (quantity) {
   listPosts.appendChild(fragment);
 };
 
+var createComment = function (postData, commentIndex) {
+  var comment = document.querySelector('.social__comment').cloneNode(true);
+
+  comment.querySelector('.social__picture').src = postData.comments[commentIndex].avatar;
+  comment.querySelector('.social__picture').alt = postData.comments[commentIndex].name;
+  comment.querySelector('.social__text').textContent = postData.comments[commentIndex].message;
+
+  return comment;
+};
+
+var showBigPicture = function (index) {
+  var container = document.querySelector('.big-picture');
+  var commentsList = document.querySelector('.social__comments');
+
+  var postData = getPostData(index);
+
+  container.querySelector('.big-picture__img').src = postData.url;
+  container.querySelector('.likes-count').textContent = postData.likes;
+  container.querySelector('.comments-count').textContent = postData.comments.length;
+  container.querySelector('.social__caption').textContent = postData.description;
+
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < postData.comments.length; i++) {
+    fragment.appendChild(createComment(postData, i));
+  }
+  commentsList.appendChild(fragment);
+
+  container.querySelector('.social__comment-count').classList.add('hidden');
+  container.querySelector('.comments-loader').classList.add('hidden');
+  document.querySelector('body').classList.add('modal-open');
+  container.classList.remove('hidden');
+};
+
 generateUrl('photos', TOTAL_QUANTITY);
 generateAvatars('img', 'avatar', TOTAL_AVATARS);
 generateComments(TOTAL_QUANTITY);
 
 renderPosts(TOTAL_QUANTITY);
-
+showBigPicture(INDEX_OF_BIG_PICTURE);
