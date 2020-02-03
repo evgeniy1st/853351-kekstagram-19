@@ -96,7 +96,6 @@ var createComment = function (postData, commentIndex) {
 
 var showBigPicture = function (index) {
   var container = document.querySelector('.big-picture');
-  container.classList.remove('hidden');
   var commentsList = document.querySelector('.social__comments');
 
   var postData = getPostData(index);
@@ -114,6 +113,8 @@ var showBigPicture = function (index) {
 
   container.querySelector('.social__comment-count').classList.add('hidden');
   container.querySelector('.comments-loader').classList.add('hidden');
+  document.querySelector('body').classList.add('modal-open');
+  container.classList.remove('hidden');
 };
 
 generateUrl('photos', TOTAL_QUANTITY);
