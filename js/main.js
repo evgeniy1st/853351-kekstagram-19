@@ -21,6 +21,10 @@ var MIN_LENGTH = 2;
 var MAX_LENGTH = 20;
 var MAX_QUANTITY = 5;
 var RULES = /^#[а-яА-ЯёЁa-zA-Z0-9]{1,20}$/;
+var SCALE_STEP_UP = 25;
+var SCALE_STEP_DOWN = -25;
+var MAX_SCALE = 100;
+var MIN_SCALE = 25;
 var stringHashtag = document.querySelector('.text__hashtags');
 var listPosts = document.querySelector('.pictures');
 var picture = document.querySelector('#picture').content.querySelector('.picture');
@@ -43,7 +47,7 @@ var scaleControlInputValue = 100;
 var imageEditingPreview = document.querySelector('.img-upload__preview img');
 var effectList = document.querySelector('.effects__list');
 var currentFilter = 'effect-none';
-var effect = 'none';
+// var effect = 'none';
 
 
 var getRandomNumber = function (min, max) {
@@ -178,8 +182,8 @@ var checkEffectNone = function () {
 };
 
 var zoomImageEditingPreview = function (step) {
-  if (scaleControlInputValue - step >= 25 && scaleControlInputValue - step <= 100) {
-    scaleControlInputValue -= step;
+  if (scaleControlInputValue - step >= MIN_SCALE && scaleControlInputValue - step <= MAX_SCALE) {
+    scaleControlInputValue += parseInt(step, 10);
   }
   imageEditingPreview.style.transform = 'scale(' + (scaleControlInputValue / 100) + ')';
   scaleControlInput.value = scaleControlInputValue + '%';
@@ -192,19 +196,21 @@ var resetSlider = function () {
 };
 
 var checkEffect = function () {
+  var effectValue = '';
   switch (currentFilter) {
-    case 'effect-none': effect = 'none';
+    case 'effect-none': effectValue = 'none';
       break;
-    case 'effect-chrome': effect = 'grayscale(' + (1 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + ')';
+    case 'effect-chrome': effectValue = 'grayscale(' + (1 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + ')';
       break;
-    case 'effect-sepia': effect = 'sepia(' + (1 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + ')';
+    case 'effect-sepia': effectValue = 'sepia(' + (1 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + ')';
       break;
-    case 'effect-marvin': effect = 'invert(' + (100 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + '%)';
+    case 'effect-marvin': effectValue = 'invert(' + (100 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + '%)';
       break;
-    case 'effect-phobos': effect = 'blur(' + (3 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + 'px)';
+    case 'effect-phobos': effectValue = 'blur(' + (3 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + 'px)';
       break;
-    case 'effect-heat': effect = 'brightness(' + (2 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth + 1).toFixed(2) + ')';
+    case 'effect-heat': effectValue = 'brightness(' + (2 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth + 1).toFixed(2) + ')';
   }
+  return effectValue;
 };
 
 var validateHashtags = function () {
@@ -214,7 +220,6 @@ var validateHashtags = function () {
   if (arrHashtags[arrHashtags.length - 1] === '') {
     arrHashtags.length = arrHashtags.length - 1;
   }
-
   for (var i = 0; i < arrHashtags.length; i++) {
     var hashtag = arrHashtags[i].toLowerCase();
 
@@ -222,20 +227,11 @@ var validateHashtags = function () {
       message = 'хештег должен начинаться с ' + START_SYMBOL + ' и содержать только буквы или цифры. Длина ' + MIN_LENGTH + ' - ' + MAX_LENGTH + ' символов';
       break;
     } else {
-      var countRepeat = 0;
-
-      for (var j = 0; j < arrHashtags.length; j++) {
-
-        if (hashtag === arrHashtags[j].toLowerCase()) {
-          countRepeat++;
-        }
-
-        if (countRepeat > 1) {
-          message = 'нельзя использовать одинаковые хештеги';
-          break;
-        } else {
-          message = '';
-        }
+      if (arrHashtags.slice(0, i).includes(hashtag)) {
+        message = 'нельзя использовать одинаковые хештеги';
+        break;
+      } else {
+        message = '';
       }
     }
   }
@@ -274,11 +270,11 @@ effectPanel.addEventListener('click', function () {
 });
 
 scaleControlSmaller.addEventListener('click', function () {
-  zoomImageEditingPreview(25);
+  zoomImageEditingPreview(SCALE_STEP_DOWN);
 });
 
 scaleControlBigger.addEventListener('click', function () {
-  zoomImageEditingPreview(-25);
+  zoomImageEditingPreview(SCALE_STEP_UP);
 });
 
 effectLevelPin.addEventListener('mousedown', function (evt) {
@@ -306,9 +302,8 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
     }
     effectLevelDepth.style.width = effectLevelPin.style.left;
 
-    checkEffect();
 
-    imageEditingPreview.style.filter = effect;
+    imageEditingPreview.style.filter = checkEffect();
   };
 
   var onMouseUp = function () {
