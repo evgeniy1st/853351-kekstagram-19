@@ -20,7 +20,7 @@ var SEPARATOR = ' ';
 var MIN_LENGTH = 2;
 var MAX_LENGTH = 20;
 var MAX_QUANTITY = 5;
-var RULES = /^#[а-яА-ЯёЁa-zA-Z0-9]+$/;
+var RULES = /^#[а-яА-ЯёЁa-zA-Z0-9]{1,20}$/;
 var stringHashtag = document.querySelector('.text__hashtags');
 var listPosts = document.querySelector('.pictures');
 var picture = document.querySelector('#picture').content.querySelector('.picture');
@@ -151,17 +151,9 @@ var closeBigPicture = function () {
 };
 
 var onPopupEscPress = function (evt) {
-  if (evt.key === ESC_KEY) {
+  if (evt.key === ESC_KEY && evt.target.type !== 'text' && evt.target.type !== 'textarea') {
     closeImageEditingWindow();
   }
-};
-
-var removeEscHandler = function () {
-  document.removeEventListener('keydown', onPopupEscPress);
-};
-
-var addEscHandler = function () {
-  document.addEventListener('keydown', onPopupEscPress);
 };
 
 var openImageEditingWindow = function () {
@@ -170,9 +162,6 @@ var openImageEditingWindow = function () {
   scaleControlInput.value = scaleControlInputValue + '%';
 
   document.addEventListener('keydown', onPopupEscPress);
-
-  stringHashtag.addEventListener('focus', removeEscHandler);
-  stringHashtag.addEventListener('blur', addEscHandler);
 };
 
 var closeImageEditingWindow = function () {
@@ -182,29 +171,15 @@ var closeImageEditingWindow = function () {
   imageEditingPreview.style.filter = 'none';
 
   document.removeEventListener('keydown', onPopupEscPress);
-  stringHashtag.removeEventListener('blur', addEscHandler);
-  stringHashtag.removeEventListener('focus', removeEscHandler);
 };
 
 var checkEffectNone = function () {
-  if (effectNone.checked) {
-    effectLevel.classList.add('hidden');
-  } else {
-    effectLevel.classList.remove('hidden');
-  }
+  effectLevel.classList.toggle('hidden', effectNone.checked);
 };
 
-var reduceImageEditingPreview = function () {
-  if (scaleControlInputValue > 25) {
-    scaleControlInputValue -= 25;
-  }
-  imageEditingPreview.style.transform = 'scale(' + (scaleControlInputValue / 100) + ')';
-  scaleControlInput.value = scaleControlInputValue + '%';
-};
-
-var increaseImageEditingPreview = function () {
-  if (scaleControlInputValue < 100) {
-    scaleControlInputValue += 25;
+var zoomImageEditingPreview = function (step) {
+  if (scaleControlInputValue - step >= 25 && scaleControlInputValue - step <= 100) {
+    scaleControlInputValue -= step;
   }
   imageEditingPreview.style.transform = 'scale(' + (scaleControlInputValue / 100) + ')';
   scaleControlInput.value = scaleControlInputValue + '%';
@@ -217,18 +192,18 @@ var resetSlider = function () {
 };
 
 var checkEffect = function () {
-  if (currentFilter === 'effect-none') {
-    effect = 'none';
-  } else if (currentFilter === 'effect-chrome') {
-    effect = 'grayscale(' + (1 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + ')';
-  } else if (currentFilter === 'effect-sepia') {
-    effect = 'sepia(' + (1 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + ')';
-  } else if (currentFilter === 'effect-marvin') {
-    effect = 'invert(' + (100 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + '%)';
-  } else if (currentFilter === 'effect-phobos') {
-    effect = 'blur(' + (3 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + 'px)';
-  } else if (currentFilter === 'effect-heat') {
-    effect = 'brightness(' + (2 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth + 1).toFixed(2) + ')';
+  switch (currentFilter) {
+    case 'effect-none': effect = 'none';
+      break;
+    case 'effect-chrome': effect = 'grayscale(' + (1 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + ')';
+      break;
+    case 'effect-sepia': effect = 'sepia(' + (1 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + ')';
+      break;
+    case 'effect-marvin': effect = 'invert(' + (100 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + '%)';
+      break;
+    case 'effect-phobos': effect = 'blur(' + (3 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + 'px)';
+      break;
+    case 'effect-heat': effect = 'brightness(' + (2 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth + 1).toFixed(2) + ')';
   }
 };
 
@@ -243,32 +218,23 @@ var validateHashtags = function () {
   for (var i = 0; i < arrHashtags.length; i++) {
     var hashtag = arrHashtags[i].toLowerCase();
 
-    if (hashtag[0] !== START_SYMBOL) {
-      message = 'хештег должен начинаться с ' + START_SYMBOL;
+    if (!RULES.test(hashtag)) {
+      message = 'хештег должен начинаться с ' + START_SYMBOL + ' и содержать только буквы или цифры. Длина ' + MIN_LENGTH + ' - ' + MAX_LENGTH + ' символов';
+      break;
     } else {
-      if (!RULES.test(hashtag)) {
-        message = 'хештег должен содержать только буквы или цифры';
-        break;
-      } else {
-        if (hashtag.length < MIN_LENGTH || hashtag.length >= MAX_LENGTH) {
-          message = 'длина одного хештега от ' + MIN_LENGTH + ' до ' + MAX_LENGTH + ' символов';
+      var countRepeat = 0;
+
+      for (var j = 0; j < arrHashtags.length; j++) {
+
+        if (hashtag === arrHashtags[j].toLowerCase()) {
+          countRepeat++;
+        }
+
+        if (countRepeat > 1) {
+          message = 'нельзя использовать одинаковые хештеги';
           break;
         } else {
-          var countRepeat = 0;
-
-          for (var j = 0; j < arrHashtags.length; j++) {
-
-            if (hashtag === arrHashtags[j].toLowerCase()) {
-              countRepeat++;
-            }
-
-            if (countRepeat > 1) {
-              message = 'нельзя использовать одинаковые хештеги';
-              break;
-            } else {
-              message = '';
-            }
-          }
+          message = '';
         }
       }
     }
@@ -308,11 +274,11 @@ effectPanel.addEventListener('click', function () {
 });
 
 scaleControlSmaller.addEventListener('click', function () {
-  reduceImageEditingPreview();
+  zoomImageEditingPreview(25);
 });
 
 scaleControlBigger.addEventListener('click', function () {
-  increaseImageEditingPreview();
+  zoomImageEditingPreview(-25);
 });
 
 effectLevelPin.addEventListener('mousedown', function (evt) {
