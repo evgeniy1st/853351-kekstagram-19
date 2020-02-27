@@ -20,7 +20,7 @@ var SEPARATOR = ' ';
 var MIN_LENGTH = 2;
 var MAX_LENGTH = 20;
 var MAX_QUANTITY = 5;
-var RULES = /^#[а-яА-ЯёЁa-zA-Z0-9]{1,20}$/;
+var RULES = /^#[а-яА-ЯёЁa-zA-Z0-9]{1,19}$/;
 var SCALE_STEP_UP = 25;
 var SCALE_STEP_DOWN = -25;
 var MAX_SCALE = 100;
@@ -182,7 +182,7 @@ var checkEffectNone = function () {
 };
 
 var zoomImageEditingPreview = function (step) {
-  if (scaleControlInputValue - step >= MIN_SCALE && scaleControlInputValue - step <= MAX_SCALE) {
+  if (scaleControlInputValue + step >= MIN_SCALE && scaleControlInputValue + step <= MAX_SCALE) {
     scaleControlInputValue += parseInt(step, 10);
   }
   imageEditingPreview.style.transform = 'scale(' + (scaleControlInputValue / 100) + ')';
