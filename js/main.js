@@ -25,7 +25,6 @@ var SCALE_STEP_UP = 25;
 var SCALE_STEP_DOWN = -25;
 var MAX_SCALE = 100;
 var MIN_SCALE = 25;
-var MAX_RANGE_EFFECT = 453;
 var stringHashtag = document.querySelector('.text__hashtags');
 var listPosts = document.querySelector('.pictures');
 var picture = document.querySelector('#picture').content.querySelector('.picture');
@@ -48,6 +47,7 @@ var scaleControlInputValue = 100;
 var imageEditingPreview = document.querySelector('.img-upload__preview img');
 var effectList = document.querySelector('.effects__list');
 var currentFilter = 'effect-none';
+var currentEffect = '';
 // var effect = 'none';
 
 
@@ -197,14 +197,11 @@ var resetSlider = function () {
 };
 
 var defaultValueEffect = function () {
-  while (imageEditingPreview.classList.length > 0) {
-    imageEditingPreview.classList.remove(imageEditingPreview.classList[0]);
+  if (imageEditingPreview.classList.contains(currentEffect)) {
+    imageEditingPreview.classList.remove(currentEffect);
   }
-  if (imageEditingPreview.style.filter) {
-    imageEditingPreview.style.removeProperty('filter');
-  }
+  imageEditingPreview.style.filter = '';
 
-  var currentEffect = '';
   switch (currentFilter) {
     case 'effect-none': currentEffect = 'effects__preview--none';
       break;
@@ -220,7 +217,7 @@ var defaultValueEffect = function () {
   }
 
   imageEditingPreview.classList.add(currentEffect);
-  effectLevelPin.style.left = MAX_RANGE_EFFECT + 'px';
+  effectLevelPin.style.left = effectLevelLine.offsetWidth + 'px';
   effectLevelDepth.style.width = effectLevelPin.style.left;
   effectLevelValue.value = effectLevelPin.style.left;
 };
@@ -321,12 +318,9 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
     effectLevelValue.value = (effectLevelPin.offsetLeft - shift);
 
     if ((effectLevelPin.offsetLeft - shift) > effectLevelLine.offsetWidth) {
-      effectLevel.removeEventListener('mousemove', onMouseMove);
       effectLevelPin.style.left = effectLevelLine.offsetWidth + 'px';
       effectLevelValue.value = effectLevelLine.offsetWidth;
     } else if ((effectLevelPin.offsetLeft - shift) < (effectLevelLine.offsetLeft - effectLevelPin.offsetWidth)) {
-      effectLevel.removeEventListener('mousemove', onMouseMove);
-
       effectLevelPin.style.left = (effectLevelLine.offsetLeft - effectLevelPin.offsetWidth) + 'px';
       effectLevelValue.value = (effectLevelLine.offsetLeft - effectLevelPin.offsetWidth);
     }
@@ -337,11 +331,11 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
   };
 
   var onMouseUp = function () {
-    effectLevel.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
   };
 
-  effectLevel.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
 });
 
