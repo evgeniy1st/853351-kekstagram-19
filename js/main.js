@@ -25,6 +25,7 @@ var SCALE_STEP_UP = 25;
 var SCALE_STEP_DOWN = -25;
 var MAX_SCALE = 100;
 var MIN_SCALE = 25;
+var MAX_RANGE_EFFECT = 453;
 var stringHashtag = document.querySelector('.text__hashtags');
 var listPosts = document.querySelector('.pictures');
 var picture = document.querySelector('#picture').content.querySelector('.picture');
@@ -195,6 +196,35 @@ var resetSlider = function () {
   effectLevelDepth.style.width = effectLevelValue.value;
 };
 
+var defaultValueEffect = function () {
+  while (imageEditingPreview.classList.length > 0) {
+    imageEditingPreview.classList.remove(imageEditingPreview.classList[0]);
+  }
+  if (imageEditingPreview.style.filter) {
+    imageEditingPreview.style.removeProperty('filter');
+  }
+
+  var currentEffect = '';
+  switch (currentFilter) {
+    case 'effect-none': currentEffect = 'effects__preview--none';
+      break;
+    case 'effect-chrome': currentEffect = 'effects__preview--chrome';
+      break;
+    case 'effect-sepia': currentEffect = 'effects__preview--sepia';
+      break;
+    case 'effect-marvin': currentEffect = 'effects__preview--marvin';
+      break;
+    case 'effect-phobos': currentEffect = 'effects__preview--phobos';
+      break;
+    case 'effect-heat': currentEffect = 'effects__preview--heat';
+  }
+
+  imageEditingPreview.classList.add(currentEffect);
+  effectLevelPin.style.left = MAX_RANGE_EFFECT + 'px';
+  effectLevelDepth.style.width = effectLevelPin.style.left;
+  effectLevelValue.value = effectLevelPin.style.left;
+};
+
 var checkEffect = function () {
   var effectValue = '';
   switch (currentFilter) {
@@ -316,9 +346,8 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
 });
 
 effectList.addEventListener('change', function (evt) {
-  resetSlider();
   currentFilter = evt.target.id;
-  imageEditingPreview.style.filter = 'none';
+  defaultValueEffect();
 });
 
 stringHashtag.addEventListener('input', validateHashtags);
@@ -329,4 +358,4 @@ generateComments(TOTAL_QUANTITY);
 
 renderPosts(TOTAL_QUANTITY);
 showBigPicture(INDEX_OF_BIG_PICTURE);
-resetSlider();
+// resetSlider();
