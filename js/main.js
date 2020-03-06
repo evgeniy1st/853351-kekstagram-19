@@ -12,7 +12,6 @@ var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var MIN_COMMENTS = 1;
 var MAX_COMMENTS = 4;
-var INDEX_OF_BIG_PICTURE = 0;
 var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
 var START_SYMBOL = '#';
@@ -48,6 +47,8 @@ var imageEditingPreview = document.querySelector('.img-upload__preview img');
 var effectList = document.querySelector('.effects__list');
 var currentFilter = 'effect-none';
 var currentEffect = '';
+var commentField = document.querySelector('.text__description');
+var closeModalFunc = function () {};
 // var effect = 'none';
 
 
@@ -96,7 +97,8 @@ var getPostData = function (index) {
     url: LIST_OF_URL_FOTOS[index],
     description: LIST_OF_DESCRIPTION[getRandomNumber(0, LIST_OF_DESCRIPTION.length)],
     likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
-    comments: getRandomListComments()
+    comments: getRandomListComments(),
+    order: index
   };
 };
 
@@ -105,6 +107,7 @@ var generatePost = function (index) {
   var postData = getPostData(index);
 
   post.querySelector('.picture__img').src = postData.url;
+  post.querySelector('.picture__img').setAttribute('data-order', postData.order);
   post.querySelector('.picture__likes').textContent = postData.likes;
   post.querySelector('.picture__comments').textContent = postData.comments.length;
 
@@ -134,7 +137,7 @@ var showBigPicture = function (index) {
 
   var postData = getPostData(index);
 
-  bigPictureContainer.querySelector('.big-picture__img').src = postData.url;
+  bigPictureContainer.querySelector('.big-picture__img img').src = postData.url;
   bigPictureContainer.querySelector('.likes-count').textContent = postData.likes;
   bigPictureContainer.querySelector('.comments-count').textContent = postData.comments.length;
   bigPictureContainer.querySelector('.social__caption').textContent = postData.description;
@@ -149,15 +152,22 @@ var showBigPicture = function (index) {
   bigPictureContainer.querySelector('.comments-loader').classList.add('hidden');
   document.querySelector('body').classList.add('modal-open');
   bigPictureContainer.classList.remove('hidden');
+  closeModalFunc = closeBigPicture;
+
+  document.addEventListener('keydown', onPopupEscPress);
 };
 
 var closeBigPicture = function () {
   bigPictureContainer.classList.add('hidden');
+  document.querySelector('body').classList.remove('modal-open');
+
+  document.removeEventListener('keydown', onPopupEscPress);
 };
 
 var onPopupEscPress = function (evt) {
   if (evt.key === ESC_KEY && evt.target.type !== 'text' && evt.target.type !== 'textarea') {
-    closeImageEditingWindow();
+    document.querySelector('body').classList.remove('modal-open');
+    closeModalFunc();
   }
 };
 
@@ -165,6 +175,7 @@ var openImageEditingWindow = function () {
   imageEditingWindow.classList.remove('hidden');
   document.querySelector('body').classList.add('modal-open');
   scaleControlInput.value = scaleControlInputValue + '%';
+  closeModalFunc = closeImageEditingWindow;
 
   document.addEventListener('keydown', onPopupEscPress);
 };
@@ -270,6 +281,12 @@ var validateHashtags = function () {
   stringHashtag.setCustomValidity(message);
 };
 
+var validateComment = function () {
+  if (commentField.value.length > 140) {
+    commentField.setCustomValidity('Не более 140 символов');
+  }
+};
+
 btnCloseBigPicture.addEventListener('click', function () {
   closeBigPicture();
 });
@@ -344,12 +361,29 @@ effectList.addEventListener('change', function (evt) {
   defaultValueEffect();
 });
 
+listPosts.addEventListener('click', function (evt) {
+  var index = evt.target.dataset.order;
+  if (index) {
+    showBigPicture(index);
+  }
+});
+
+listPosts.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    if (evt.target.querySelector('.picture__img')) {
+      var index = evt.target.querySelector('.picture__img').dataset.order;
+      showBigPicture(index);
+    }
+  }
+});
+
 stringHashtag.addEventListener('input', validateHashtags);
+
+commentField.addEventListener('input', validateComment)
 
 generateUrl('photos', TOTAL_QUANTITY);
 generateAvatars('img', 'avatar', TOTAL_AVATARS);
 generateComments(TOTAL_QUANTITY);
 
 renderPosts(TOTAL_QUANTITY);
-showBigPicture(INDEX_OF_BIG_PICTURE);
 // resetSlider();
