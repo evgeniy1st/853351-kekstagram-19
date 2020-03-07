@@ -157,24 +157,19 @@ var showBigPicture = function (index) {
   body.classList.add('modal-open');
   bigPictureContainer.classList.remove('hidden');
 
-  document.addEventListener('keydown', closeBigPicture);
+  document.addEventListener('keydown', closeBigPictureEscPress);
 };
 
-var closeBigPicture = function (evt) {
-  if (evt.key) {
-    onDocumentEscPress(evt, bigPictureContainer);
-  } else {
-    bigPictureContainer.classList.add('hidden');
-    body.classList.remove('modal-open');
-  }
+var closeBigPicture = function () {
+  bigPictureContainer.classList.add('hidden');
+  body.classList.remove('modal-open');
 
-  document.removeEventListener('keydown', closeBigPicture);
+  document.removeEventListener('keydown', closeBigPictureEscPress);
 };
 
-var onDocumentEscPress = function (evt, el) {
+var closeBigPictureEscPress = function (evt) {
   if (evt.key === ESC_KEY && evt.target.type !== 'text' && evt.target.type !== 'textarea') {
-    body.classList.remove('modal-open');
-    el.classList.add('hidden');
+    closeBigPicture();
   }
 };
 
@@ -183,21 +178,23 @@ var openImageEditingWindow = function () {
   body.classList.add('modal-open');
   scaleControlInput.value = scaleControlInputValue + '%';
 
-  document.addEventListener('keydown', closeImageEditingWindow);
+  document.addEventListener('keydown', closeImageEditingWindowEscPress);
 };
 
-var closeImageEditingWindow = function (evt) {
-  if (evt.key) {
-    onDocumentEscPress(evt, imageEditingWindow);
-  } else {
-    imageEditingWindow.classList.add('hidden');
-    body.classList.remove('modal-open');
-  }
+var closeImageEditingWindow = function () {
+  imageEditingWindow.classList.add('hidden');
+  body.classList.remove('modal-open');
   uploadField.value = '';
   resetSlider();
   imageEditingPreview.style.filter = 'none';
 
-  document.removeEventListener('keydown', closeImageEditingWindow);
+  document.removeEventListener('keydown', closeImageEditingWindowEscPress);
+};
+
+var closeImageEditingWindowEscPress = function (evt) {
+  if (evt.key === ESC_KEY && evt.target.type !== 'text' && evt.target.type !== 'textarea') {
+    closeImageEditingWindow();
+  }
 };
 
 var checkEffectNone = function () {
@@ -298,12 +295,12 @@ var validateComment = function () {
   }
 };
 
-btnCloseBigPicture.addEventListener('click', function (evt) {
-  closeBigPicture(evt);
+btnCloseBigPicture.addEventListener('click', function () {
+  closeBigPicture();
 });
 
-uploadField.addEventListener('change', function (evt) {
-  openImageEditingWindow(evt);
+uploadField.addEventListener('change', function () {
+  openImageEditingWindow();
 
   if (effectNone.checked) {
     effectLevel.classList.add('hidden');
