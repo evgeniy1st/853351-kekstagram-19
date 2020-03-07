@@ -168,7 +168,7 @@ var closeBigPicture = function () {
 };
 
 var closeBigPictureEscPress = function (evt) {
-  if (evt.key === ESC_KEY && evt.target.type !== 'text' && evt.target.type !== 'textarea') {
+  if (evt.key === ESC_KEY && evt.target.type !== 'text') {
     closeBigPicture();
   }
 };
