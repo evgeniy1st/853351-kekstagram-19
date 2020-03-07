@@ -289,12 +289,6 @@ var validateHashtags = function () {
   stringHashtag.setCustomValidity(message);
 };
 
-var validateComment = function () {
-  if (commentField.value.length > 140) {
-    commentField.setCustomValidity('Не более 140 символов');
-  }
-};
-
 btnCloseBigPicture.addEventListener('click', function () {
   closeBigPicture();
 });
@@ -384,8 +378,6 @@ listPosts.addEventListener('keydown', function (evt) {
 });
 
 stringHashtag.addEventListener('input', validateHashtags);
-
-commentField.addEventListener('input', validateComment);
 
 generateUrl('photos', TOTAL_QUANTITY);
 generateAvatars('img', 'avatar', TOTAL_AVATARS);
