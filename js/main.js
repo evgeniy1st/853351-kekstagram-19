@@ -12,7 +12,6 @@ var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var MIN_COMMENTS = 1;
 var MAX_COMMENTS = 4;
-var INDEX_OF_BIG_PICTURE = 0;
 var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
 var START_SYMBOL = '#';
@@ -48,6 +47,8 @@ var imageEditingPreview = document.querySelector('.img-upload__preview img');
 var effectList = document.querySelector('.effects__list');
 var currentFilter = 'effect-none';
 var currentEffect = '';
+var listOfCreatedPosts = [];
+var body = document.querySelector('body');
 // var effect = 'none';
 
 
@@ -96,15 +97,19 @@ var getPostData = function (index) {
     url: LIST_OF_URL_FOTOS[index],
     description: LIST_OF_DESCRIPTION[getRandomNumber(0, LIST_OF_DESCRIPTION.length)],
     likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
-    comments: getRandomListComments()
+    comments: getRandomListComments(),
+    order: index
   };
 };
 
 var generatePost = function (index) {
   var post = picture.cloneNode(true);
   var postData = getPostData(index);
+  var pictureImg = post.querySelector('.picture__img');
 
-  post.querySelector('.picture__img').src = postData.url;
+  listOfCreatedPosts.push(postData);
+  pictureImg.src = postData.url;
+  pictureImg.dataset.order = postData.order;
   post.querySelector('.picture__likes').textContent = postData.likes;
   post.querySelector('.picture__comments').textContent = postData.comments.length;
 
@@ -121,9 +126,10 @@ var renderPosts = function (quantity) {
 
 var createComment = function (postData, commentIndex) {
   var comment = document.querySelector('.social__comment').cloneNode(true);
+  var commentImg = comment.querySelector('.social__picture');
 
-  comment.querySelector('.social__picture').src = postData.comments[commentIndex].avatar;
-  comment.querySelector('.social__picture').alt = postData.comments[commentIndex].name;
+  commentImg.src = postData.comments[commentIndex].avatar;
+  commentImg.alt = postData.comments[commentIndex].name;
   comment.querySelector('.social__text').textContent = postData.comments[commentIndex].message;
 
   return comment;
@@ -132,9 +138,9 @@ var createComment = function (postData, commentIndex) {
 var showBigPicture = function (index) {
   var commentsList = document.querySelector('.social__comments');
 
-  var postData = getPostData(index);
+  var postData = listOfCreatedPosts[index];
 
-  bigPictureContainer.querySelector('.big-picture__img').src = postData.url;
+  bigPictureContainer.querySelector('.big-picture__img img').src = postData.url;
   bigPictureContainer.querySelector('.likes-count').textContent = postData.likes;
   bigPictureContainer.querySelector('.comments-count').textContent = postData.comments.length;
   bigPictureContainer.querySelector('.social__caption').textContent = postData.description;
@@ -147,35 +153,47 @@ var showBigPicture = function (index) {
 
   bigPictureContainer.querySelector('.social__comment-count').classList.add('hidden');
   bigPictureContainer.querySelector('.comments-loader').classList.add('hidden');
-  document.querySelector('body').classList.add('modal-open');
+  body.classList.add('modal-open');
   bigPictureContainer.classList.remove('hidden');
+
+  document.addEventListener('keydown', closeBigPictureEscPress);
 };
 
 var closeBigPicture = function () {
   bigPictureContainer.classList.add('hidden');
+  body.classList.remove('modal-open');
+
+  document.removeEventListener('keydown', closeBigPictureEscPress);
 };
 
-var onPopupEscPress = function (evt) {
-  if (evt.key === ESC_KEY && evt.target.type !== 'text' && evt.target.type !== 'textarea') {
-    closeImageEditingWindow();
+var closeBigPictureEscPress = function (evt) {
+  if (evt.key === ESC_KEY && evt.target.type !== 'text') {
+    closeBigPicture();
   }
 };
 
 var openImageEditingWindow = function () {
   imageEditingWindow.classList.remove('hidden');
-  document.querySelector('body').classList.add('modal-open');
+  body.classList.add('modal-open');
   scaleControlInput.value = scaleControlInputValue + '%';
 
-  document.addEventListener('keydown', onPopupEscPress);
+  document.addEventListener('keydown', closeImageEditingWindowEscPress);
 };
 
 var closeImageEditingWindow = function () {
   imageEditingWindow.classList.add('hidden');
+  body.classList.remove('modal-open');
   uploadField.value = '';
   resetSlider();
   imageEditingPreview.style.filter = 'none';
 
-  document.removeEventListener('keydown', onPopupEscPress);
+  document.removeEventListener('keydown', closeImageEditingWindowEscPress);
+};
+
+var closeImageEditingWindowEscPress = function (evt) {
+  if (evt.key === ESC_KEY && evt.target.type !== 'text' && evt.target.type !== 'textarea') {
+    closeImageEditingWindow();
+  }
 };
 
 var checkEffectNone = function () {
@@ -344,6 +362,20 @@ effectList.addEventListener('change', function (evt) {
   defaultValueEffect();
 });
 
+listPosts.addEventListener('click', function (evt) {
+  var index = evt.target.dataset.order;
+  if (index) {
+    showBigPicture(index);
+  }
+});
+
+listPosts.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY && evt.target.classList.contains('picture')) {
+    var index = evt.target.querySelector('.picture__img').dataset.order;
+    showBigPicture(index);
+  }
+});
+
 stringHashtag.addEventListener('input', validateHashtags);
 
 generateUrl('photos', TOTAL_QUANTITY);
@@ -351,5 +383,4 @@ generateAvatars('img', 'avatar', TOTAL_AVATARS);
 generateComments(TOTAL_QUANTITY);
 
 renderPosts(TOTAL_QUANTITY);
-showBigPicture(INDEX_OF_BIG_PICTURE);
 // resetSlider();
