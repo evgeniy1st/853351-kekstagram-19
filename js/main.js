@@ -47,7 +47,6 @@ var imageEditingPreview = document.querySelector('.img-upload__preview img');
 var effectList = document.querySelector('.effects__list');
 var currentFilter = 'effect-none';
 var currentEffect = '';
-var commentField = document.querySelector('.text__description');
 var listOfCreatedPosts = [];
 var body = document.querySelector('body');
 // var effect = 'none';
