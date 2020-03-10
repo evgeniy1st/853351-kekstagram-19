@@ -32,7 +32,7 @@
     imageEditingPreview.style.transform = 'none';
   };
 
-  window.scaleFilter = {
+  window.scaleTransform = {
     reset: resetScale
   };
 })();
