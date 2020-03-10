@@ -9,9 +9,9 @@
   var currentFilter = 'effect-none';
   var currentEffect = '';
   var effectLevel = document.querySelector('.img-upload__effect-level');
-  var effectLevelValue = document.querySelector('.effect-level__value');
-  var effectLevelDepth = document.querySelector('.effect-level__depth');
-  var effectLevelPin = document.querySelector('.effect-level__pin');
+  var effectLevelValue = effectLevel.querySelector('.effect-level__value');
+  var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
+  var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
   var effectLevelLine = effectLevel.querySelector('.effect-level__line');
 
   var checkEffectNone = function () {
@@ -72,7 +72,7 @@
     defaultValueEffect();
   });
 
-  window.filterSelection = {
+  window.filterSelector = {
     effect: checkEffect
   };
 })();

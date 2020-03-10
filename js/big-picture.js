@@ -2,7 +2,6 @@
 
 (function () {
   var body = document.querySelector('body');
-  var listPosts = document.querySelector('.pictures');
   var bigPictureContainer = document.querySelector('.big-picture');
   var btnCloseBigPicture = bigPictureContainer.querySelector('.big-picture__cancel');
 
@@ -50,7 +49,7 @@
   };
 
   var closeBigPictureEscPress = function (evt) {
-    if (evt.key === window.keyCode.ESC_KEY && evt.target.type !== 'text') {
+    if (evt.key === window.utils.ESC_KEY && evt.target.type !== 'text') {
       closeBigPicture();
     }
   };
@@ -59,17 +58,7 @@
     closeBigPicture();
   });
 
-  listPosts.addEventListener('click', function (evt) {
-    var index = evt.target.dataset.order;
-    if (index) {
-      showBigPicture(index);
-    }
-  });
-
-  listPosts.addEventListener('keydown', function (evt) {
-    if (evt.key === window.keyCode.ENTER_KEY && evt.target.classList.contains('picture')) {
-      var index = evt.target.querySelector('.picture__img').dataset.order;
-      showBigPicture(index);
-    }
-  });
+  window.bigPicture = {
+    show: showBigPicture
+  };
 })();

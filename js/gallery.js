@@ -29,6 +29,20 @@
 
   renderPosts(window.data.TOTAL_QUANTITY);
 
+  listPosts.addEventListener('click', function (evt) {
+    var index = evt.target.dataset.order;
+    if (index) {
+      window.bigPicture.show(index);
+    }
+  });
+
+  listPosts.addEventListener('keydown', function (evt) {
+    if (evt.key === window.utils.ENTER_KEY && evt.target.classList.contains('picture')) {
+      var index = evt.target.querySelector('.picture__img').dataset.order;
+      window.bigPicture.show(index);
+    }
+  });
+
   window.gallery = {
     listOfCreatedPosts: listOfCreatedPosts
   };

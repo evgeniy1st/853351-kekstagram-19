@@ -1,11 +1,11 @@
 'use strict';
 
 (function () {
-  var effectLevelPin = document.querySelector('.effect-level__pin');
   var effectLevel = document.querySelector('.img-upload__effect-level');
+  var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
   var effectLevelLine = effectLevel.querySelector('.effect-level__line');
-  var effectLevelValue = document.querySelector('.effect-level__value');
-  var effectLevelDepth = document.querySelector('.effect-level__depth');
+  var effectLevelValue = effectLevel.querySelector('.effect-level__value');
+  var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
   var imageEditingPreview = document.querySelector('.img-upload__preview img');
 
   effectLevelPin.addEventListener('mousedown', function (evt) {
@@ -31,7 +31,7 @@
       effectLevelDepth.style.width = effectLevelPin.style.left;
 
 
-      imageEditingPreview.style.filter = window.filterSelection.effect();
+      imageEditingPreview.style.filter = window.filterSelector.effect();
     };
 
     var onMouseUp = function () {

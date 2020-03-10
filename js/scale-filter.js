@@ -27,7 +27,12 @@
     zoomImageEditingPreview(SCALE_STEP_UP);
   });
 
+  var resetScale = function () {
+    scaleControlInputValue = 100;
+    imageEditingPreview.style.transform = 'none';
+  };
+
   window.scaleFilter = {
-    value: scaleControlInputValue
+    reset: resetScale
   };
 })();

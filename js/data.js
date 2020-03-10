@@ -14,12 +14,6 @@
   var MIN_COMMENTS = 1;
   var MAX_COMMENTS = 4;
 
-  var getRandomNumber = function (min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-  };
-
   var generateUrl = function (dir, quantity) {
     for (var i = 1; i <= quantity; i++) {
       LIST_OF_URL_FOTOS.push(dir + '/' + i + '.jpg');
@@ -28,9 +22,9 @@
 
   var getComment = function () {
     return {
-      avatar: LIST_OF_AVATARS[getRandomNumber(0, LIST_OF_AVATARS.length)],
-      message: LIST_OF_MESSAGE[getRandomNumber(0, LIST_OF_MESSAGE.length)],
-      name: LIST_OF_NAMES[getRandomNumber(0, LIST_OF_NAMES.length)]
+      avatar: LIST_OF_AVATARS[window.utils.getRandomNumber(0, LIST_OF_AVATARS.length)],
+      message: LIST_OF_MESSAGE[window.utils.getRandomNumber(0, LIST_OF_MESSAGE.length)],
+      name: LIST_OF_NAMES[window.utils.getRandomNumber(0, LIST_OF_NAMES.length)]
     };
   };
 
@@ -48,8 +42,8 @@
 
   var getRandomListComments = function () {
     var randomListComments = [];
-    for (var i = 0; i < getRandomNumber(MIN_COMMENTS, MAX_COMMENTS); i++) {
-      randomListComments.push(LIST_OF_COMMENTS[getRandomNumber(0, LIST_OF_COMMENTS.length)]);
+    for (var i = 0; i < window.utils.getRandomNumber(MIN_COMMENTS, MAX_COMMENTS); i++) {
+      randomListComments.push(LIST_OF_COMMENTS[window.utils.getRandomNumber(0, LIST_OF_COMMENTS.length)]);
     }
     return randomListComments;
   };
@@ -57,8 +51,8 @@
   var getPostData = function (index) {
     return {
       url: LIST_OF_URL_FOTOS[index],
-      description: LIST_OF_DESCRIPTION[getRandomNumber(0, LIST_OF_DESCRIPTION.length)],
-      likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
+      description: LIST_OF_DESCRIPTION[window.utils.getRandomNumber(0, LIST_OF_DESCRIPTION.length)],
+      likes: window.utils.getRandomNumber(MIN_LIKES, MAX_LIKES),
       comments: getRandomListComments(),
       order: index
     };
