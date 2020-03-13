@@ -9,7 +9,7 @@
   var RULES = /^#[а-яА-ЯёЁa-zA-Z0-9]{1,19}$/;
   var stringHashtag = document.querySelector('.text__hashtags');
 
-  var validateHashtags = function () {
+  var stringHashtagInputHandler = function () {
     var arrHashtags = stringHashtag.value.split(SEPARATOR);
     var message = '';
 
@@ -39,5 +39,5 @@
     stringHashtag.setCustomValidity(message);
   };
 
-  stringHashtag.addEventListener('input', validateHashtags);
+  stringHashtag.addEventListener('input', stringHashtagInputHandler);
 })();
