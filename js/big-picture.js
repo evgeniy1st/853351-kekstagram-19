@@ -36,22 +36,21 @@
     body.classList.add('modal-open');
     bigPictureContainer.classList.remove('hidden');
 
-    document.addEventListener('keydown', onCloseBigPictureEscPress);
+    document.addEventListener('keydown', closeBigPictureEscPress);
   };
 
   var closeBigPicture = function () {
     bigPictureContainer.classList.add('hidden');
     body.classList.remove('modal-open');
 
-    document.removeEventListener('keydown', onCloseBigPictureEscPress);
+    document.removeEventListener('keydown', closeBigPictureEscPress);
   };
 
-  var onCloseBigPictureEscPress = function (evt) {
+  var closeBigPictureEscPress = function (evt) {
     if (evt.key === window.utils.ESC_KEY && evt.target.type !== 'text') {
       closeBigPicture();
     }
   };
-
 
   btnCloseBigPicture.addEventListener('click', function () {
     closeBigPicture();
