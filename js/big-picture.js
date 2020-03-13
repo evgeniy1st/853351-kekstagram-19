@@ -52,6 +52,7 @@
     }
   };
 
+
   btnCloseBigPicture.addEventListener('click', function () {
     closeBigPicture();
   });
