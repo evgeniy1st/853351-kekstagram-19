@@ -19,7 +19,7 @@
     body.classList.add('modal-open');
     scaleControlInput.value = 100 + '%';
 
-    document.addEventListener('keydown', closeImageEditingWindowEscPressHandler);
+    document.addEventListener('keydown', keydownHandler);
   };
 
   var resetSlider = function () {
@@ -35,10 +35,10 @@
     window.scaleTransform.reset();
     form.reset();
 
-    document.removeEventListener('keydown', closeImageEditingWindowEscPressHandler);
+    document.removeEventListener('keydown', keydownHandler);
   };
 
-  var closeImageEditingWindowEscPressHandler = function (evt) {
+  var keydownHandler = function (evt) {
     if (evt.key === window.utils.ESC_KEY && evt.target.type !== 'text' && evt.target.type !== 'textarea') {
       closeImageEditingWindow();
     }
