@@ -5,9 +5,8 @@
 
   var generatePost = function (index) {
     var post = picture.cloneNode(true);
-    var postData = window.data.getPostData(index);
+    var postData = window.downloadData.success[index];
     var pictureImg = post.querySelector('.picture__img');
-
     pictureImg.src = postData.url;
     pictureImg.dataset.order = postData.order;
     post.querySelector('.picture__likes').textContent = postData.likes;

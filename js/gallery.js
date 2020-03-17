@@ -11,5 +11,5 @@
     listPosts.appendChild(fragment);
   };
 
-  renderPosts(window.data.TOTAL_QUANTITY);
+  renderPosts(window.downloadData.success.length);
 })();
