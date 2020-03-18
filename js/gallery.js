@@ -15,5 +15,5 @@
     listPosts.appendChild(fragment);
   };
 
-  window.downloadData(' https://js.dump.academy/kekstagram/data', renderPosts, errorHandler);
+  window.downloadData(renderPosts, errorHandler);
 })();
