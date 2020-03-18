@@ -3,9 +3,9 @@
 (function () {
   var picture = document.querySelector('#picture').content.querySelector('.picture');
 
-  var generatePost = function (index) {
+  var generatePost = function (index, arr) {
     var post = picture.cloneNode(true);
-    var postData = window.downloadData.success[index];
+    var postData = arr[index];
     var pictureImg = post.querySelector('.picture__img');
     pictureImg.src = postData.url;
     pictureImg.dataset.order = postData.order;

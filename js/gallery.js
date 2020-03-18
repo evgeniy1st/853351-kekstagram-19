@@ -3,13 +3,17 @@
 (function () {
   var listPosts = document.querySelector('.pictures');
 
-  var renderPosts = function (quantity) {
+  var errorHandler = function (message) {
+    console.error(message);
+  };
+
+  var renderPosts = function (data) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < quantity; i++) {
-      fragment.appendChild(window.preview.generatePost(i));
+    for (var i = 0; i < data.length; i++) {
+      fragment.appendChild(window.preview.generatePost(i, data));
     }
     listPosts.appendChild(fragment);
   };
 
-  renderPosts(window.downloadData.success.length);
+  window.downloadData(' https://js.dump.academy/kekstagram/data', renderPosts, errorHandler);
 })();
