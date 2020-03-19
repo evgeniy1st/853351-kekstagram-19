@@ -7,7 +7,14 @@
     var errorNotification = document.createElement('div');
 
     errorNotification.textContent = message;
-    errorNotification.setAttribute('style', 'background-color: red; font-size: 16px; display: flex; justify-content: center; align-items: center; width: 100%; color: #fff; padding: 10px 0;');
+    errorNotification.style.padding = '10px 0';
+    errorNotification.style.backgroundColor = 'red';
+    errorNotification.style.fontSize = 16 + 'px';
+    errorNotification.style.display = 'flex';
+    errorNotification.style.justifyContent = 'center';
+    errorNotification.style.alignItems = 'center';
+    errorNotification.style.width = 100 + '%';
+    errorNotification.style.color = '#fff';
     document.querySelector('body').insertAdjacentElement('afterbegin', errorNotification);
   };
 

@@ -10,6 +10,7 @@
     var comment = document.querySelector('.social__comment').cloneNode(true);
     var commentImg = comment.querySelector('.social__picture');
 
+
     commentImg.src = postData.comments[commentIndex].avatar;
     commentImg.alt = postData.comments[commentIndex].name;
     comment.querySelector('.social__text').textContent = postData.comments[commentIndex].message;
@@ -28,6 +29,10 @@
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < data.comments.length; i++) {
       fragment.appendChild(createComment(data, i));
+    }
+    var oldComments = commentsList.querySelectorAll('.social__comment');
+    for (var j = 0; j < oldComments.length; j++) {
+      oldComments[j].parentNode.removeChild(oldComments[j]);
     }
     commentsList.appendChild(fragment);
 
