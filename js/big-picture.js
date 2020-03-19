@@ -30,10 +30,7 @@
     for (var i = 0; i < data.comments.length; i++) {
       fragment.appendChild(createComment(data, i));
     }
-    var oldComments = commentsList.querySelectorAll('.social__comment');
-    for (var j = 0; j < oldComments.length; j++) {
-      oldComments[j].parentNode.removeChild(oldComments[j]);
-    }
+    commentsList.innerHTML = '';
     commentsList.appendChild(fragment);
 
     bigPictureContainer.querySelector('.social__comment-count').classList.add('hidden');

@@ -7,14 +7,7 @@
     var errorNotification = document.createElement('div');
 
     errorNotification.textContent = message;
-    errorNotification.style.padding = '10px 0';
-    errorNotification.style.backgroundColor = 'red';
-    errorNotification.style.fontSize = 16 + 'px';
-    errorNotification.style.display = 'flex';
-    errorNotification.style.justifyContent = 'center';
-    errorNotification.style.alignItems = 'center';
-    errorNotification.style.width = 100 + '%';
-    errorNotification.style.color = '#fff';
+    errorNotification.classList.add('error-visible');
     document.querySelector('body').insertAdjacentElement('afterbegin', errorNotification);
   };
 
