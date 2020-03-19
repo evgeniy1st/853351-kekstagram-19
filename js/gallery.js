@@ -3,13 +3,21 @@
 (function () {
   var listPosts = document.querySelector('.pictures');
 
-  var renderPosts = function (quantity) {
+  var errorHandler = function (message) {
+    var errorNotification = document.createElement('div');
+
+    errorNotification.textContent = message;
+    errorNotification.classList.add('error-visible');
+    document.querySelector('body').insertAdjacentElement('afterbegin', errorNotification);
+  };
+
+  var renderPosts = function (data) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < quantity; i++) {
-      fragment.appendChild(window.preview.generatePost(i));
+    for (var i = 0; i < data.length; i++) {
+      fragment.appendChild(window.preview.generatePost(i, data));
     }
     listPosts.appendChild(fragment);
   };
 
-  renderPosts(window.data.TOTAL_QUANTITY);
+  window.downloadData(renderPosts, errorHandler);
 })();

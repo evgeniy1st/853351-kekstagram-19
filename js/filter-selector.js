@@ -25,8 +25,6 @@
     imageEditingPreview.style.filter = '';
 
     switch (currentFilter) {
-      case 'effect-none': currentEffect = 'effects__preview--none';
-        break;
       case 'effect-chrome': currentEffect = 'effects__preview--chrome';
         break;
       case 'effect-sepia': currentEffect = 'effects__preview--sepia';
@@ -36,6 +34,8 @@
       case 'effect-phobos': currentEffect = 'effects__preview--phobos';
         break;
       case 'effect-heat': currentEffect = 'effects__preview--heat';
+        break;
+      default: currentEffect = 'effects__preview--none';
     }
 
     imageEditingPreview.classList.add(currentEffect);
@@ -47,8 +47,6 @@
   var checkEffect = function () {
     var effectValue = '';
     switch (currentFilter) {
-      case 'effect-none': effectValue = 'none';
-        break;
       case 'effect-chrome': effectValue = 'grayscale(' + (1 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + ')';
         break;
       case 'effect-sepia': effectValue = 'sepia(' + (1 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + ')';
@@ -58,6 +56,8 @@
       case 'effect-phobos': effectValue = 'blur(' + (3 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth).toFixed(2) + 'px)';
         break;
       case 'effect-heat': effectValue = 'brightness(' + (2 / effectLevelLine.offsetWidth * effectLevelDepth.offsetWidth + 1).toFixed(2) + ')';
+        break;
+      default: effectValue = 'none';
     }
     return effectValue;
   };

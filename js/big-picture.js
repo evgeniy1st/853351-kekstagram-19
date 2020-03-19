@@ -10,6 +10,7 @@
     var comment = document.querySelector('.social__comment').cloneNode(true);
     var commentImg = comment.querySelector('.social__picture');
 
+
     commentImg.src = postData.comments[commentIndex].avatar;
     commentImg.alt = postData.comments[commentIndex].name;
     comment.querySelector('.social__text').textContent = postData.comments[commentIndex].message;
@@ -29,6 +30,7 @@
     for (var i = 0; i < data.comments.length; i++) {
       fragment.appendChild(createComment(data, i));
     }
+    commentsList.innerHTML = '';
     commentsList.appendChild(fragment);
 
     bigPictureContainer.querySelector('.social__comment-count').classList.add('hidden');
