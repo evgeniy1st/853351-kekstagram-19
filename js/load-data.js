@@ -1,9 +1,7 @@
 'use strict';
 
 (function () {
-  var DATA_URL = 'https://js.dump.academy/kekstagram/data';
-
-  window.downloadData = function (successHandler, errorHandler) {
+  window.loadData = function (successHandler, errorHandler, url, timeout, method, data) {
     var xhr = new XMLHttpRequest();
     var errorMessage = '';
     xhr.responseType = 'json';
@@ -11,6 +9,7 @@
       switch (xhr.status) {
         case 200:
           successHandler(xhr.response);
+          console.log(data);
           break;
         case 400:
           errorMessage = 'неверный запрос ' + xhr.status;
@@ -43,9 +42,13 @@
       errorHandler('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 10000;
+    xhr.addEventListener('readystatechange', function () {
+      console.log(data);
+    });
 
-    xhr.open('GET', DATA_URL);
-    xhr.send();
+    xhr.timeout = timeout;
+
+    xhr.open(method, url);
+    xhr.send(data);
   };
 })();
