@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var TIMEOUT = 10000;
+  var TIMEOUT = 1;
   var DATA_URL = 'https://js.dump.academy/kekstagram';
   var form = document.querySelector('.img-upload__form');
   var uploadField = form.querySelector('#upload-file');
@@ -15,6 +15,9 @@
   var imageEditingPreview = form.querySelector('.img-upload__preview img');
   var body = document.querySelector('body');
   var scaleControlInput = form.querySelector('.scale__control--value');
+  var main = document.querySelector('main');
+  var successMessage = document.querySelector('#success').content.querySelector('.success');
+  var errorMessage = document.querySelector('#error').content.querySelector('.error');
 
   var openImageEditingWindow = function () {
     imageEditingWindow.classList.remove('hidden');
@@ -46,12 +49,53 @@
     }
   };
 
-  var successHandler = function () {
-    closeImageEditingWindow();
+  var closeResultMessage = function (el) {
+    el.parentNode.removeChild(el);
+    body.classList.remove('modal-open');
   };
 
-  var errorHandler = function (message) {
-    console.log(message);
+  var successKeydownHandler = function (evt) {
+    if (evt.key === window.utils.ESC_KEY) {
+      closeResultMessage(successMessage);
+      document.removeEventListener('keydown', successKeydownHandler);
+    }
+  };
+
+  var errorKeydownHandler = function (evt) {
+    if (evt.key === window.utils.ESC_KEY) {
+      closeResultMessage(errorMessage);
+      document.removeEventListener('keydown', errorKeydownHandler);
+    }
+  };
+
+  var successHandler = function () {
+    var closeButton = successMessage.querySelector('.success__button');
+    var successInner = successMessage.querySelector('.success__inner');
+
+    closeImageEditingWindow();
+    main.appendChild(successMessage);
+    body.classList.add('modal-open');
+    document.addEventListener('keydown', successKeydownHandler);
+    successMessage.addEventListener('click', function (evt) {
+      if (evt.target !== successInner || evt.target === closeButton) {
+        closeResultMessage(successMessage);
+      }
+    });
+  };
+
+  var errorHandler = function () {
+    var closeButton = errorMessage.querySelector('.error__button');
+    var errorInner = errorMessage.querySelector('.error__inner');
+
+    closeImageEditingWindow();
+    main.appendChild(errorMessage);
+    body.classList.add('modal-open');
+    document.addEventListener('keydown', errorKeydownHandler);
+    errorMessage.addEventListener('click', function (evt) {
+      if (evt.target !== errorInner || evt.target === closeButton) {
+        closeResultMessage(errorMessage);
+      }
+    });
   };
 
   uploadField.addEventListener('change', function () {
@@ -71,10 +115,6 @@
       closeImageEditingWindow();
     }
   });
-
-  form.addEventListener('input', function () {
-    console.log(new FormData(form));
-  })
 
   form.addEventListener('submit', function (evt) {
     window.loadData(successHandler, errorHandler, DATA_URL, TIMEOUT, 'POST', new FormData(form));

@@ -9,7 +9,6 @@
       switch (xhr.status) {
         case 200:
           successHandler(xhr.response);
-          console.log(data);
           break;
         case 400:
           errorMessage = 'неверный запрос ' + xhr.status;
@@ -40,10 +39,6 @@
 
     xhr.addEventListener('timeout', function () {
       errorHandler('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-    });
-
-    xhr.addEventListener('readystatechange', function () {
-      console.log(data);
     });
 
     xhr.timeout = timeout;
