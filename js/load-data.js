@@ -1,9 +1,7 @@
 'use strict';
 
 (function () {
-  var DATA_URL = 'https://js.dump.academy/kekstagram/data';
-
-  window.downloadData = function (successHandler, errorHandler) {
+  window.loadData = function (successHandler, errorHandler, url, timeout, method, data) {
     var xhr = new XMLHttpRequest();
     var errorMessage = '';
     xhr.responseType = 'json';
@@ -43,9 +41,9 @@
       errorHandler('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 10000;
+    xhr.timeout = timeout;
 
-    xhr.open('GET', DATA_URL);
-    xhr.send();
+    xhr.open(method, url);
+    xhr.send(data);
   };
 })();

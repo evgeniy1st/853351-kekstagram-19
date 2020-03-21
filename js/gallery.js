@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var DATA_URL = 'https://js.dump.academy/kekstagram/data';
+  var TIMEOUT = 10000;
   var listPosts = document.querySelector('.pictures');
 
   var errorHandler = function (message) {
@@ -19,5 +21,5 @@
     listPosts.appendChild(fragment);
   };
 
-  window.downloadData(renderPosts, errorHandler);
+  window.loadData(renderPosts, errorHandler, DATA_URL, TIMEOUT, 'GET');
 })();
