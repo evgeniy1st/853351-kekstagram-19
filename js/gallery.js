@@ -4,6 +4,7 @@
   var DATA_URL = 'https://js.dump.academy/kekstagram/data';
   var TIMEOUT = 10000;
   var listPosts = document.querySelector('.pictures');
+  var imgFilters = document.querySelector('.img-filters');
 
   var errorHandler = function (message) {
     var errorNotification = document.createElement('div');
@@ -13,13 +14,25 @@
     document.querySelector('body').insertAdjacentElement('afterbegin', errorNotification);
   };
 
+  var successHandler = function (data) {
+    window.gallery.posts = data;
+    renderPosts(data);
+  };
+
   var renderPosts = function (data) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < data.length; i++) {
       fragment.appendChild(window.preview.generatePost(i, data));
     }
     listPosts.appendChild(fragment);
+    if (imgFilters.classList.contains('img-filters--inactive')) {
+      imgFilters.classList.remove('img-filters--inactive');
+    }
   };
 
-  window.loadData(renderPosts, errorHandler, DATA_URL, TIMEOUT, 'GET');
+  window.loadData(successHandler, errorHandler, DATA_URL, TIMEOUT, 'GET');
+
+  window.gallery = {
+    render: renderPosts
+  };
 })();
