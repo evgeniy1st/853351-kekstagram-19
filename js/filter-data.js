@@ -8,7 +8,7 @@
   var activeButton = defaultFilterButton;
 
 
-  var setActive = function (el) {
+  var setActiveFilter = function (el) {
     activeButton = el;
     activeButton.classList.add('img-filters__button--active');
   };
@@ -23,33 +23,33 @@
 
   var filterPanel = document.querySelector('.img-filters__form');
 
-  filterPanel.addEventListener('click', function (evt) {
+  filterPanel.addEventListener('click', window.utils.debounce(function (evt) {
     var posts = window.gallery.posts;
-    var postsOut;
+    var postsCopy = posts.slice();
+    var filteredPosts;
 
     switch (evt.target) {
       case randomFilterButton:
-        postsOut = [];
-        var postsCopy = posts.slice();
+        filteredPosts = [];
         for (var i = 0; i < QUANTITY_RANDOM_POSTS; i++) {
           var randomIndex = window.utils.getRandomNumber(0, postsCopy.length - 1);
-          postsOut.push(postsCopy[randomIndex]);
+          filteredPosts.push(postsCopy[randomIndex]);
           postsCopy.splice(randomIndex, 1);
         }
         break;
       case discussedFilterButton:
-        postsOut = posts.slice();
+        filteredPosts = posts.slice();
 
-        postsOut.sort(function (a, b) {
+        filteredPosts.sort(function (a, b) {
           return b.comments.length - a.comments.length;
         });
         break;
-      default: postsOut = posts;
+      default: filteredPosts = posts;
     }
 
     resetPicture();
-    setActive(evt.target);
-    window.gallery.render(postsOut);
-  });
+    setActiveFilter(evt.target);
+    window.gallery.render(filteredPosts);
+  }));
 
 })();
