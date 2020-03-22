@@ -6,10 +6,12 @@
   var bigPictureContainer = document.querySelector('.big-picture');
   var btnCloseBigPicture = bigPictureContainer.querySelector('.big-picture__cancel');
   var commentsLoader = bigPictureContainer.querySelector('.comments-loader');
+  var commentsList = document.querySelector('.social__comments');
+  var commentTemplate = commentsList.querySelector('.social__comment');
 
 
   var createComment = function (commentData) {
-    var comment = document.querySelector('.social__comment').cloneNode(true);
+    var comment = commentTemplate.cloneNode(true);
     var commentImg = comment.querySelector('.social__picture');
 
 
@@ -21,7 +23,7 @@
   };
 
   var showBigPicture = function (data) {
-    var commentsList = document.querySelector('.social__comments');
+    commentsList.innerHTML = '';
     var totalComments = data.comments;
     var totalCommentsLength = totalComments.length;
     var totalCommentsCopy = totalComments.slice();
@@ -32,26 +34,23 @@
     bigPictureContainer.querySelector('.likes-count').textContent = data.likes;
     bigPictureContainer.querySelector('.social__caption').textContent = data.description;
 
-    var renderComments = function (arr, first) {
+    var renderComments = function (arr) {
       for (var i = 0; i < arr.length; i++) {
         fragment.appendChild(createComment(totalComments[i]));
         count++;
       }
-      if (arr < COMMENT_STEP) {
-        commentsLoader.classList.add('hidden');
-      }
-      if (first === true) {
-        commentsList.innerHTML = '';
-      }
       commentsList.appendChild(fragment);
     };
 
-    var cutComments = function (arr, first) {
-      renderComments(arr.splice(0, COMMENT_STEP), first);
+    var cutComments = function (arr) {
+      if (arr.length < COMMENT_STEP + 1) {
+        commentsLoader.classList.add('hidden');
+      }
+      renderComments(arr.splice(0, COMMENT_STEP));
     };
 
-    var commentsClickHandler = function (first) {
-      cutComments(totalCommentsCopy, first);
+    var commentsClickHandler = function () {
+      cutComments(totalCommentsCopy);
       bigPictureContainer.querySelector('.social__comment-count').textContent = count + ' из ' + totalCommentsLength + ' комментариев';
     };
 
@@ -80,7 +79,7 @@
     window.addEventListener('keydown', windowKeydownHandler);
     window.addEventListener('click', windowClickHandler);
 
-    commentsClickHandler(true);
+    commentsClickHandler();
   };
 
   var closeBigPicture = function () {
