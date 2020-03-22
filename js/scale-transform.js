@@ -11,7 +11,8 @@
   var scaleControlInputValue = 100;
   var imageEditingPreview = document.querySelector('.img-upload__preview img');
 
-  var zoomImageEditingPreview = function (step) {
+  var zoomImageEditingPreview = function (direction) {
+    var step = SCALE_STEP * direction;
     if (scaleControlInputValue + step >= MIN_SCALE && scaleControlInputValue + step <= MAX_SCALE) {
       scaleControlInputValue += parseInt(step, 10);
     }
@@ -20,11 +21,11 @@
   };
 
   scaleControlSmaller.addEventListener('click', function () {
-    zoomImageEditingPreview(SCALE_STEP * -1);
+    zoomImageEditingPreview(-1);
   });
 
   scaleControlBigger.addEventListener('click', function () {
-    zoomImageEditingPreview(SCALE_STEP);
+    zoomImageEditingPreview(1);
   });
 
   var resetScale = function () {
