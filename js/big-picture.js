@@ -8,14 +8,14 @@
   var commentsLoader = bigPictureContainer.querySelector('.comments-loader');
 
 
-  var createComment = function (postData, commentIndex) {
+  var createComment = function (commentData) {
     var comment = document.querySelector('.social__comment').cloneNode(true);
     var commentImg = comment.querySelector('.social__picture');
 
 
-    commentImg.src = postData[commentIndex].avatar;
-    commentImg.alt = postData[commentIndex].name;
-    comment.querySelector('.social__text').textContent = postData[commentIndex].message;
+    commentImg.src = commentData.avatar;
+    commentImg.alt = commentData.name;
+    comment.querySelector('.social__text').textContent = commentData.message;
 
     return comment;
   };
@@ -24,6 +24,7 @@
     var commentsList = document.querySelector('.social__comments');
     var totalComments = data.comments;
     var totalCommentsLength = totalComments.length;
+    var totalCommentsCopy = totalComments.slice();
     var count = 0;
     var fragment = document.createDocumentFragment();
 
@@ -31,27 +32,24 @@
     bigPictureContainer.querySelector('.likes-count').textContent = data.likes;
     bigPictureContainer.querySelector('.social__caption').textContent = data.description;
 
-    var commentsClickHandler = function (first) {
-      var step;
-      if (totalCommentsLength - count - COMMENT_STEP >= 0) {
-        step = COMMENT_STEP;
-      } else {
-        step = totalCommentsLength - count;
+    var renderComments = function (arr, first) {
+      for (var i = 0; i < arr.length; i++) {
+        fragment.appendChild(createComment(totalComments[i]));
+        count++;
       }
-      for (var i = count; i < count + step; i++) {
-        fragment.appendChild(createComment(totalComments, i));
-      }
-      if (totalCommentsLength >= count + COMMENT_STEP) {
-        count += COMMENT_STEP;
-      } else {
-        count = totalCommentsLength;
-        commentsLoader.removeEventListener('click', commentsClickHandler);
-      }
-      bigPictureContainer.querySelector('.social__comment-count').textContent = count + ' из ' + totalCommentsLength + ' комментариев';
       if (first === true) {
         commentsList.innerHTML = '';
       }
       commentsList.appendChild(fragment);
+    };
+
+    var cutComments = function (arr, first) {
+      renderComments(arr.splice(0, COMMENT_STEP), first);
+    };
+
+    var commentsClickHandler = function (first) {
+      cutComments(totalCommentsCopy, first);
+      bigPictureContainer.querySelector('.social__comment-count').textContent = count + ' из ' + totalCommentsLength + ' комментариев';
     };
 
     var removeHandler = function () {
