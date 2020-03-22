@@ -37,6 +37,9 @@
         fragment.appendChild(createComment(totalComments[i]));
         count++;
       }
+      if (arr < COMMENT_STEP) {
+        commentsLoader.classList.add('hidden');
+      }
       if (first === true) {
         commentsList.innerHTML = '';
       }
@@ -81,6 +84,7 @@
   };
 
   var closeBigPicture = function () {
+    commentsLoader.classList.remove('hidden');
     bigPictureContainer.classList.add('hidden');
     body.classList.remove('modal-open');
 
