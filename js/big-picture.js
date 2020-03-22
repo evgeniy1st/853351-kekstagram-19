@@ -54,6 +54,21 @@
       commentsList.appendChild(fragment);
     };
 
+    var removeHandler = function () {
+      if (bigPictureContainer.classList.contains('hidden')) {
+        commentsLoader.removeEventListener('click', commentsClickHandler);
+        window.removeEventListener('click', windowClickHandler);
+        window.removeEventListener('keydown', windowKeydownHandler);
+      }
+    };
+
+    var windowClickHandler = function () {
+      removeHandler();
+    };
+
+    var windowKeydownHandler = function () {
+      removeHandler();
+    };
 
     body.classList.add('modal-open');
     bigPictureContainer.classList.remove('hidden');
@@ -61,6 +76,8 @@
     document.addEventListener('keydown', keydownHandler);
 
     commentsLoader.addEventListener('click', commentsClickHandler);
+    window.addEventListener('keydown', windowKeydownHandler);
+    window.addEventListener('click', windowClickHandler);
 
     commentsClickHandler(true);
   };
