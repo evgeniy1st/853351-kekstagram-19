@@ -2,9 +2,10 @@
 
 (function () {
   var QUANTITY_RANDOM_POSTS = 10;
-  var defaultFilterButton = document.querySelector('#filter-default');
-  var randomFilterButton = document.querySelector('#filter-random');
-  var discussedFilterButton = document.querySelector('#filter-discussed');
+  var filterPanel = document.querySelector('.img-filters__form');
+  var defaultFilterButton = filterPanel.querySelector('#filter-default');
+  var randomFilterButton = filterPanel.querySelector('#filter-random');
+  var discussedFilterButton = filterPanel.querySelector('#filter-discussed');
   var activeButton = defaultFilterButton;
 
 
@@ -20,8 +21,6 @@
     }
     activeButton.classList.remove('img-filters__button--active');
   };
-
-  var filterPanel = document.querySelector('.img-filters__form');
 
   filterPanel.addEventListener('click', window.utils.debounce(function (evt) {
     var posts = window.gallery.posts;
