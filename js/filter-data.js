@@ -37,7 +37,7 @@
         }
         break;
       case discussedFilterButton:
-        filteredPosts = posts.slice();
+        filteredPosts = postsCopy;
 
         filteredPosts.sort(function (a, b) {
           return b.comments.length - a.comments.length;
