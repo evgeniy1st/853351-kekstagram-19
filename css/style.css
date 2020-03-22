@@ -1454,3 +1454,7 @@ main {
   width: 100%;
   color: #fff;
 }
+
+.text__hashtags:invalid {
+  outline: 2px solid red;
+}
