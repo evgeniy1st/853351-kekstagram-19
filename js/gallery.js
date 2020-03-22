@@ -5,6 +5,7 @@
   var TIMEOUT = 10000;
   var listPosts = document.querySelector('.pictures');
   var imgFilters = document.querySelector('.img-filters');
+  var inactiveFilterPanelClass = 'img-filters--inactive';
 
   var errorHandler = function (message) {
     var errorNotification = document.createElement('div');
@@ -25,10 +26,13 @@
       fragment.appendChild(window.preview.generatePost(i, data));
     }
     listPosts.appendChild(fragment);
-    if (imgFilters.classList.contains('img-filters--inactive')) {
-      imgFilters.classList.remove('img-filters--inactive');
-    }
   };
+
+  window.addEventListener('load', function () {
+    if (imgFilters.classList.contains(inactiveFilterPanelClass)) {
+      imgFilters.classList.remove(inactiveFilterPanelClass);
+    }
+  });
 
   window.loadData(successHandler, errorHandler, DATA_URL, TIMEOUT, 'GET');
 
